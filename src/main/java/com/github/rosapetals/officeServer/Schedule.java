@@ -39,7 +39,7 @@ public class Schedule {
                         case 2:
                             for(Player player: Bukkit.getOnlinePlayers()) {
                                 updateBossBar(player, 1.0, "Night");
-                                player.getWorld().setTime(12000);
+                                player.getWorld().setTime(14000);
                                 setCurrentSchedule("Night");
                             }
                             break;

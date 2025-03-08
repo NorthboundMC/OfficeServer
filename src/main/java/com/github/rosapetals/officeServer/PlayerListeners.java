@@ -18,10 +18,11 @@ public class PlayerListeners implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-       createBossBar(player, getCurrentSchedule());
+        createBossBar(player, getCurrentSchedule());
 
     }
 
+    @EventHandler
     public void onPlayerDisconnect(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         removeBossBar(player);
