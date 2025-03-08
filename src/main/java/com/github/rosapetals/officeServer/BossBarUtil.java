@@ -14,8 +14,8 @@ import java.util.UUID;
 public class BossBarUtil {
     private static final HashMap<UUID, BossBar> bossBars = new HashMap<>();
     public static void createBossBar(Player player,String title) {
-        BossBar bossBar = Bukkit.createBossBar(title, BarColor.RED, BarStyle.SOLID);
-        bossBar.setProgress(1.0); // Full progress
+        BossBar bossBar = Bukkit.createBossBar(title, BarColor.YELLOW, BarStyle.SOLID);
+        bossBar.setProgress(0.25); // Full progress
         bossBar.addPlayer(player);
         bossBars.put(player.getUniqueId(), bossBar);
     }
@@ -32,6 +32,13 @@ public class BossBarUtil {
         if (bossBar != null) {
             bossBar.setProgress(progress);
             bossBar.setTitle(title);
+        }
+    }
+
+    public static void changeBossColor(Player player, BarColor color) {
+        BossBar bossBar = bossBars.get(player.getUniqueId());
+        if ( bossBar != null) {
+            bossBar.setColor(color);
         }
     }
 }

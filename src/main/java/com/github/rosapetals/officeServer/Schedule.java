@@ -4,12 +4,15 @@ package com.github.rosapetals.officeServer;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.World;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.Color.*;
 import java.awt.*;
 import java.util.*;
 
+import static com.github.rosapetals.officeServer.BossBarUtil.changeBossColor;
 import static com.github.rosapetals.officeServer.BossBarUtil.updateBossBar;
 import static com.github.rosapetals.officeServer.OfficeServer.setCurrentSchedule;
 
@@ -29,6 +32,7 @@ public class Schedule {
                                 player.getWorld().setTime(222200);
                                 setCurrentSchedule("☼ MORNING CREW ☼");
                                 player.playSound(player, Sound.BLOCK_ANVIL_PLACE, 10, 1);
+                                changeBossColor(player, BarColor.YELLOW);
 
                         }
                             break;
@@ -38,6 +42,7 @@ public class Schedule {
                                 player.getWorld().setTime(5000);
                                 setCurrentSchedule("◆ LUNCH BREAK ◆");
                                 player.playSound(player, Sound.ENTITY_VILLAGER_CELEBRATE, 10, 1);
+                                changeBossColor(player, BarColor.GREEN);
                             }
                             break;
                         case 2:
@@ -48,6 +53,7 @@ public class Schedule {
                                 player.playSound(player, Sound.BLOCK_ANVIL_PLACE, 10, 1);
                                 player.sendMessage("[BOSS] GET BACK TO WORK... ");
                                 player.playSound(player, Sound.ENTITY_VILLAGER_NO, 10, 1);
+                                changeBossColor(player, BarColor.PINK);
                             }
                             break;
                         case 3:
@@ -57,6 +63,7 @@ public class Schedule {
                                 setCurrentSchedule("⋆⁺₊⋆ ☾⋆⁺₊⋆NIGHT SHIFT⋆⁺₊⋆ ☾⋆⁺₊⋆");
                                 player.playSound(player, Sound.BLOCK_ANVIL_PLACE, 10, 1);
                                 player.playSound(player, Sound.ENTITY_GHAST_SCREAM, 10, 1);
+                                changeBossColor(player, BarColor.RED);
 
                             }
 

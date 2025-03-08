@@ -1,11 +1,17 @@
 package com.github.rosapetals.officeServer;
 
 import com.github.rosapetals.officeServer.listeners.BlockListener;
+import com.github.rosapetals.officeServer.listeners.CommandListener;
 import com.github.rosapetals.officeServer.listeners.PlayerListeners;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.bukkit.boss.BarColor;
+import org.bukkit.command.Command;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import static com.github.rosapetals.officeServer.BossBarUtil.*;
 
 
 public final class OfficeServer extends JavaPlugin implements Listener {
@@ -28,6 +34,8 @@ public final class OfficeServer extends JavaPlugin implements Listener {
     private static final Schedule schedule = new Schedule();
 
 
+
+
     @Override
     public void onEnable() {
         System.out.println("Works.");
@@ -35,12 +43,19 @@ public final class OfficeServer extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(this,this);
         Bukkit.getPluginManager().registerEvents(new PlayerListeners(),this);
         Bukkit.getPluginManager().registerEvents(new BlockListener(), this);
+        Bukkit.getPluginManager().registerEvents(new CommandListener(), this);
         schedule.startAnnouncementLoop();
+        for(Player player: Bukkit.getOnlinePlayers()){
+            createBossBar(player,"☼ MORNING CREW ☼");
+            changeBossColor(player, BarColor.YELLOW);
+        }
     }
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        for (Player player: Bukkit.getOnlinePlayers()) {
+            removeBossBar(player);
+        }
     }
 
 
