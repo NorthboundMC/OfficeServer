@@ -2,6 +2,7 @@ package com.github.rosapetals.officeServer;
 
 
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
