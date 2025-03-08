@@ -7,7 +7,7 @@ public final class OfficeServer extends JavaPlugin {
     @Override
     public void onEnable() {
         System.out.println("Works.");
-        Schedule.schedule();
+        // change
 
     }
 
