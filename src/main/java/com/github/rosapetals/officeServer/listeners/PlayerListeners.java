@@ -1,6 +1,6 @@
-package com.github.rosapetals.officeServer;
+package com.github.rosapetals.officeServer.listeners;
 
-import org.bukkit.Bukkit;
+import com.github.rosapetals.officeServer.OfficeServer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

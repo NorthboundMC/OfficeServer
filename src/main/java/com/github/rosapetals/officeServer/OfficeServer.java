@@ -1,13 +1,9 @@
 package com.github.rosapetals.officeServer;
 
+import com.github.rosapetals.officeServer.listeners.BlockListener;
+import com.github.rosapetals.officeServer.listeners.PlayerListeners;
 import org.bukkit.Bukkit;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarStyle;
-import org.bukkit.boss.BossBar;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 
@@ -38,6 +34,7 @@ public final class OfficeServer extends JavaPlugin implements Listener {
         instance = this;
         Bukkit.getPluginManager().registerEvents(this,this);
         Bukkit.getPluginManager().registerEvents(new PlayerListeners(),this);
+        Bukkit.getPluginManager().registerEvents(new BlockListener(), this);
         schedule.startAnnouncementLoop();
     }
 
