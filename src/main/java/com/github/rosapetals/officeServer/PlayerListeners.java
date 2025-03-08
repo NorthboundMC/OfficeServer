@@ -9,6 +9,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import static com.github.rosapetals.officeServer.BossBarUtil.createBossBar;
 import static com.github.rosapetals.officeServer.BossBarUtil.removeBossBar;
+import static com.github.rosapetals.officeServer.OfficeServer.getCurrentSchedule;
 //import static com.github.rosapetals.officeServer.OfficeServer.getCurrentSchedule;
 
 
@@ -17,7 +18,7 @@ public class PlayerListeners implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-       createBossBar(player, "test");
+       createBossBar(player, getCurrentSchedule());
 
     }
 

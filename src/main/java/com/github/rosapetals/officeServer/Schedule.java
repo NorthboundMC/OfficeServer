@@ -22,7 +22,6 @@ public class Schedule {
                 public void run() {
                     switch (step) {
                         case 0:
-                            Bukkit.broadcastMessage("§aHi");
                             for(Player player: Bukkit.getOnlinePlayers()) {
                                 updateBossBar(player, 0.25, "Morning");
                                 player.getWorld().setTime(2300);
@@ -30,7 +29,6 @@ public class Schedule {
                         }
                             break;
                         case 1:
-                            Bukkit.broadcastMessage("§bHello");
                             for(Player player: Bukkit.getOnlinePlayers()) {
                                 updateBossBar(player, 0.5, "Afternoon");
                                 player.getWorld().setTime(6000);
@@ -39,7 +37,6 @@ public class Schedule {
                             }
                             break;
                         case 2:
-                            Bukkit.broadcastMessage("§eWhat's up");
                             for(Player player: Bukkit.getOnlinePlayers()) {
                                 updateBossBar(player, 1.0, "Night");
                                 player.getWorld().setTime(12000);
