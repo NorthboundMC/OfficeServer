@@ -13,19 +13,20 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 
 public final class OfficeServer extends JavaPlugin implements Listener {
-        private static String currentSchedule;
 
+    private static String currentSchedule = "";
+
+    private static OfficeServer instance;
+
+    public static OfficeServer getInstance() {
+        return instance;
+    }
     public static void setCurrentSchedule(String string)  {
         currentSchedule = string;
     }
-
-    public static OfficeServer getInstance() {
-        return getPlugin(OfficeServer.class);
+    public static String getCurrentSchedule() {
+        return currentSchedule;
     }
-
- //   public static String getCurrentSchedule() {
-  //      return currentSchedule;
- //   }
 
 
     private static final Schedule schedule = new Schedule();
@@ -34,6 +35,7 @@ public final class OfficeServer extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         System.out.println("Works.");
+        instance = this;
         Bukkit.getPluginManager().registerEvents(this,this);
         Bukkit.getPluginManager().registerEvents(new PlayerListeners(),this);
         schedule.startAnnouncementLoop();
