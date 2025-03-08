@@ -18,7 +18,9 @@ public class Schedule {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                Bukkit.broadcastMessage("ATTENTION:" + randomItem);
+                int randomIndex = random.nextInt(list.size());
+                String randomItem = list.get(randomIndex);
+                Bukkit.broadcastMessage("ATTENTION: " + randomItem);
             }
         };
 
