@@ -4,14 +4,12 @@ import com.github.rosapetals.officeServer.listeners.BlockListener;
 import com.github.rosapetals.officeServer.listeners.CommandListener;
 import com.github.rosapetals.officeServer.listeners.PlayerListeners;
 import org.bukkit.Bukkit;
-import org.bukkit.World;
 import org.bukkit.boss.BarColor;
-import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import static com.github.rosapetals.officeServer.BossBarUtil.*;
+import static com.github.rosapetals.officeServer.utils.BossBarUtil.*;
 
 
 public final class OfficeServer extends JavaPlugin implements Listener {
