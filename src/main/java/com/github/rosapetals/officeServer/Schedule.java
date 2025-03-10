@@ -62,6 +62,6 @@ public class Schedule {
 
                 step = (step + 1) % scheduleMessages.length;
             }
-        }.runTaskTimer(OfficeServer.getInstance(), 0L, 300L);
+        }.runTaskTimer(OfficeServer.getInstance(), 0L, 3000L);
     }
     }

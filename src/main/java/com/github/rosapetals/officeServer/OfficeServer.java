@@ -3,6 +3,9 @@ package com.github.rosapetals.officeServer;
 import com.github.rosapetals.officeServer.listeners.BlockListener;
 import com.github.rosapetals.officeServer.listeners.CommandListener;
 import com.github.rosapetals.officeServer.listeners.PlayerListeners;
+import com.github.rosapetals.officeServer.menus.ComputerMenu;
+import com.github.rosapetals.officeServer.utils.VaultHandler;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
 import org.bukkit.entity.Player;
@@ -13,6 +16,8 @@ import static com.github.rosapetals.officeServer.utils.BossBarUtil.*;
 
 
 public final class OfficeServer extends JavaPlugin implements Listener {
+
+    private Economy economy = null;
 
     private static String currentSchedule = "";
 
@@ -42,6 +47,8 @@ public final class OfficeServer extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(new PlayerListeners(),this);
         Bukkit.getPluginManager().registerEvents(new BlockListener(), this);
         Bukkit.getPluginManager().registerEvents(new CommandListener(), this);
+        Bukkit.getPluginManager().registerEvents(new ComputerMenu(), this);
+        VaultHandler.initiate();
         schedule.startAnnouncementLoop();
         for(Player player: Bukkit.getOnlinePlayers()){
             createBossBar(player,"☼ MORNING CREW ☼");
@@ -57,6 +64,7 @@ public final class OfficeServer extends JavaPlugin implements Listener {
     }
 
 
-
+    public Economy getEconomy() {
+        return economy;
+    }
 }
-//hi

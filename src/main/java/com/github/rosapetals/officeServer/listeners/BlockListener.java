@@ -1,10 +1,12 @@
 package com.github.rosapetals.officeServer.listeners;
 
 
+import com.github.rosapetals.officeServer.menus.ComputerMenu;
 import com.github.rosapetals.officeServer.utils.Cooldown;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.block.BlockType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -29,9 +31,20 @@ public class BlockListener implements Listener {
                 player.sendMessage("[BOSS] Can't you see this broom is broken!!");
                 player.playSound(player, Sound.ENTITY_VILLAGER_NO, 10, 1);
             }
-        } else {
+        } else if (player.getItemInHand() != null ) {
             player.sendMessage("[BOSS] Go grab a broom from the supply closet to complete this task!");
             player.playSound(player, Sound.ENTITY_VILLAGER_NO, 10, 1);
+        }
+    }
+
+    @EventHandler
+    public void onCompClick(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+
+        if (event.getClickedBlock().getType() == Material.PLAYER_HEAD) {
+            ComputerMenu.openMenu(player);
+        } else if (event.getClickedBlock().getType() == null) {
+            player.sendMessage("DEBUG");
         }
     }
 
