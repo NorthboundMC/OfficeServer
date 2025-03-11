@@ -5,11 +5,14 @@ import com.github.rosapetals.officeServer.listeners.CommandListener;
 import com.github.rosapetals.officeServer.listeners.PlayerListeners;
 import com.github.rosapetals.officeServer.menus.ComputerMenu;
 import com.github.rosapetals.officeServer.utils.VaultHandler;
+import lombok.Getter;
+import lombok.Setter;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import static com.github.rosapetals.officeServer.utils.BossBarUtil.*;
@@ -17,21 +20,14 @@ import static com.github.rosapetals.officeServer.utils.BossBarUtil.*;
 
 public final class OfficeServer extends JavaPlugin implements Listener {
 
+    @Getter
     private Economy economy = null;
+
 
     private static String currentSchedule = "";
 
+    @Getter
     private static OfficeServer instance;
-
-    public static OfficeServer getInstance() {
-        return instance;
-    }
-    public static void setCurrentSchedule(String string)  {
-        currentSchedule = string;
-    }
-    public static String getCurrentSchedule() {
-        return currentSchedule;
-    }
 
 
     private static final Schedule schedule = new Schedule();
@@ -48,12 +44,25 @@ public final class OfficeServer extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(new BlockListener(), this);
         Bukkit.getPluginManager().registerEvents(new CommandListener(), this);
         Bukkit.getPluginManager().registerEvents(new ComputerMenu(), this);
-        VaultHandler.initiate();
+        vaultSetup();
         schedule.startAnnouncementLoop();
         for(Player player: Bukkit.getOnlinePlayers()){
             createBossBar(player,"☼ MORNING CREW ☼");
             changeBossColor(player, BarColor.YELLOW);
         }
+    }
+
+    private void vaultSetup() {
+        RegisteredServiceProvider<Economy> rsp = this.getServer()
+                .getServicesManager().getRegistration(Economy.class);
+
+        if (rsp == null) throw new NullPointerException("Economy service provider was not found");
+        economy = rsp.getProvider();
+        rsp = getServer().getServicesManager().getRegistration(Economy.class);
+        if (rsp == null) throw new NullPointerException("Economy service provider was not found");
+        economy = rsp.getProvider();
+
+        VaultHandler.initiate();
     }
 
     @Override
@@ -63,8 +72,14 @@ public final class OfficeServer extends JavaPlugin implements Listener {
         }
     }
 
-
-    public Economy getEconomy() {
-        return economy;
+    @SuppressWarnings("Lombok")
+    public static void setCurrentSchedule(String string)  {
+        currentSchedule = string;
     }
+    @SuppressWarnings("Lombok")
+    public static String getCurrentSchedule() {
+        return currentSchedule;
+    }
+
+
 }

@@ -43,8 +43,9 @@ public class Schedule {
                 BarColor color = bossBarColors[step];
                 Sound sound = scheduleSounds[step];
 
-                Bukkit.getOnlinePlayers().iterator().next().getWorld().setTime(time);
-
+                if (!Bukkit.getOnlinePlayers().isEmpty()) {
+                    Bukkit.getOnlinePlayers().iterator().next().getWorld().setTime(time);
+                }
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     updateBossBar(player, (step + 1) * 0.25, message);
                     setCurrentSchedule(message);

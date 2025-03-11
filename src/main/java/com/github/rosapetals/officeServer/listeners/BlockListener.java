@@ -31,7 +31,7 @@ public class BlockListener implements Listener {
                 player.sendMessage("[BOSS] Can't you see this broom is broken!!");
                 player.playSound(player, Sound.ENTITY_VILLAGER_NO, 10, 1);
             }
-        } else if (player.getItemInHand() != null ) {
+        } else if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock().getType() == Material.BROWN_WOOL) {
             player.sendMessage("[BOSS] Go grab a broom from the supply closet to complete this task!");
             player.playSound(player, Sound.ENTITY_VILLAGER_NO, 10, 1);
         }
