@@ -19,16 +19,20 @@ import static com.github.rosapetals.officeServer.utils.BossBarUtil.*;
 
 
 public final class OfficeServer extends JavaPlugin implements Listener {
-
-    @Getter
     private Economy economy = null;
 
+    public Economy getEconomy() {
+        return economy;
+    }
 
     private static String currentSchedule = "";
 
-    @Getter
+
     private static OfficeServer instance;
 
+    public static OfficeServer getInstance() {
+        return instance;
+    }
 
     private static final Schedule schedule = new Schedule();
 
