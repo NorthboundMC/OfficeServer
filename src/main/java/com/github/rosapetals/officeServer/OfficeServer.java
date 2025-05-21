@@ -6,7 +6,6 @@ import com.github.rosapetals.officeServer.listeners.PlayerListeners;
 import com.github.rosapetals.officeServer.menus.ComputerMenu;
 import com.github.rosapetals.officeServer.utils.VaultHandler;
 import lombok.Getter;
-import lombok.Setter;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
@@ -45,10 +44,10 @@ public final class OfficeServer extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(new CommandListener(), this);
         Bukkit.getPluginManager().registerEvents(new ComputerMenu(), this);
         vaultSetup();
-        schedule.startAnnouncementLoop();
         for(Player player: Bukkit.getOnlinePlayers()){
-            createBossBar(player,"☼ MORNING CREW ☼");
-            changeBossColor(player, BarColor.YELLOW);
+            createBossBar(player,"⋆⁺₊⋆ ☾⋆⁺₊⋆NIGHT SHIFT⋆⁺₊⋆ ☾⋆⁺₊⋆");
+            changeBossColor(player, BarColor.PURPLE);
+            player.getWorld().setTime(2100);
         }
     }
 

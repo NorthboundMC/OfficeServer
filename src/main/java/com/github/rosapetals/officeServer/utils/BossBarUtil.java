@@ -13,8 +13,8 @@ import java.util.UUID;
 public class BossBarUtil {
     private static final HashMap<UUID, BossBar> bossBars = new HashMap<>();
     public static void createBossBar(Player player,String title) {
-        BossBar bossBar = Bukkit.createBossBar(title, BarColor.YELLOW, BarStyle.SOLID);
-        bossBar.setProgress(0.25); // Full progress
+        BossBar bossBar = Bukkit.createBossBar(title, title.contains("NIGHT") ? BarColor.PURPLE : BarColor.WHITE, BarStyle.SOLID);
+        bossBar.setProgress(1); // Full progress
         bossBar.addPlayer(player);
         bossBars.put(player.getUniqueId(), bossBar);
     }

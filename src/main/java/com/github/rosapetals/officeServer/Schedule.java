@@ -17,19 +17,15 @@ public class Schedule {
 
 
     private final String[] scheduleMessages = {
-            "☼ MORNING CREW ☼",
-            "◆ LUNCH BREAK ◆",
-            "☾☼ AFTERNOON SHIFT ☾☼",
-            "⋆⁺₊⋆ ☾⋆⁺₊⋆NIGHT SHIFT⋆⁺₊⋆ ☾⋆⁺₊⋆"
+            "⋆⁺₊⋆ ☾⋆⁺₊⋆NIGHT SHIFT⋆⁺₊⋆ ☾⋆⁺₊⋆",
+            "☼ DAYLIGHT ☼"
     };
 
-    private final long[] scheduleTimes = {222200, 5000, 6000, 14000};
-    private final BarColor[] bossBarColors = {BarColor.YELLOW, BarColor.GREEN, BarColor.PINK, BarColor.RED};
+    private final long[] scheduleTimes = {21000, 100};
+    private final BarColor[] bossBarColors = {BarColor.PURPLE, BarColor.WHITE};
     private final Sound[] scheduleSounds = {
             Sound.BLOCK_ANVIL_PLACE,
-            Sound.ENTITY_VILLAGER_CELEBRATE,
-            Sound.BLOCK_ANVIL_PLACE,
-            Sound.BLOCK_ANVIL_PLACE
+            Sound.ENTITY_VILLAGER_CELEBRATE
     };
 
     public void startAnnouncementLoop() {
@@ -47,22 +43,18 @@ public class Schedule {
                     Bukkit.getOnlinePlayers().iterator().next().getWorld().setTime(time);
                 }
                 for (Player player : Bukkit.getOnlinePlayers()) {
-                    updateBossBar(player, (step + 1) * 0.25, message);
+                    updateBossBar(player, 1, message);
                     setCurrentSchedule(message);
                     player.playSound(player, sound, 10, 1);
                     changeBossColor(player, color);
 
-                    if (step == 2) {
-                        player.sendMessage(CC.translate("&c[BOSS] GET BACK TO WORK..."));
-                        player.playSound(player, Sound.ENTITY_VILLAGER_NO, 10, 1);
-                    }
-                    else if (step == 3) {
-                        player.playSound(player, Sound.ENTITY_GHAST_SCREAM, 10, 1);
+                    if (step == 0) {
+                        player.sendMessage(CC.translate("&5&l[NIGHT SHIFT]&5 Better head back to the laundromat..."));
                     }
                 }
 
                 step = (step + 1) % scheduleMessages.length;
             }
-        }.runTaskTimer(OfficeServer.getInstance(), 0L, 3000L);
+        }.runTaskTimer(OfficeServer.getInstance(), 0L, 1000L);
     }
     }
