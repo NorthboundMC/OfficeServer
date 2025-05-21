@@ -3,10 +3,23 @@ package com.github.rosapetals.officeServer;
 
 import com.github.rosapetals.officeServer.utils.CC;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Sound;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Levelled;
 import org.bukkit.boss.BarColor;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Villager;
+import org.bukkit.event.entity.VillagerAcquireTradeEvent;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import static com.github.rosapetals.officeServer.utils.BossBarUtil.changeBossColor;
 import static com.github.rosapetals.officeServer.utils.BossBarUtil.updateBossBar;
@@ -16,45 +29,79 @@ import static com.github.rosapetals.officeServer.OfficeServer.setCurrentSchedule
 public class Schedule {
 
 
-    private final String[] scheduleMessages = {
-            "⋆⁺₊⋆ ☾⋆⁺₊⋆NIGHT SHIFT⋆⁺₊⋆ ☾⋆⁺₊⋆",
-            "☼ DAYLIGHT ☼"
-    };
+    private static Random RANDOM;
 
-    private final long[] scheduleTimes = {21000, 100};
-    private final BarColor[] bossBarColors = {BarColor.PURPLE, BarColor.WHITE};
-    private final Sound[] scheduleSounds = {
-            Sound.BLOCK_ANVIL_PLACE,
-            Sound.ENTITY_VILLAGER_CELEBRATE
-    };
+    private static OfficeServer instance;
 
-    public void startAnnouncementLoop() {
+    private static World world;
+
+    private static List<Location> villagerSpawnLocations = new ArrayList<>();
+
+    public void startCustomerLoop() {
+
+        RANDOM = new Random();
+        instance = OfficeServer.getInstance();
+        world = instance.getServer().getWorld("world");
+
+        List<Location> villagerSpawnLocations2 = List.of(
+
+                new Location(world, -0.5, -60, 22.5, 90, 0),
+                new Location(world, -0.5, -60, 21.5, 90, 0),
+                new Location(world, -0.5, -60, 20.5, 90, 0),
+                new Location(world, -0.5, -60, 19.5, 90, 0),
+                new Location(world, -0.5, -60, 18.5, 90, 0)
+                );
+
+        villagerSpawnLocations = new ArrayList<>(villagerSpawnLocations2);
+
         new BukkitRunnable() {
-            private int step = 0;
 
             @Override
             public void run() {
-                String message = scheduleMessages[step];
-                long time = scheduleTimes[step];
-                BarColor color = bossBarColors[step];
-                Sound sound = scheduleSounds[step];
 
-                if (!Bukkit.getOnlinePlayers().isEmpty()) {
-                    Bukkit.getOnlinePlayers().iterator().next().getWorld().setTime(time);
-                }
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    updateBossBar(player, 1, message);
-                    setCurrentSchedule(message);
-                    player.playSound(player, sound, 10, 1);
-                    changeBossColor(player, color);
 
-                    if (step == 0) {
-                        player.sendMessage(CC.translate("&5&l[NIGHT SHIFT]&5 Better head back to the laundromat..."));
-                    }
-                }
+                spawnNewCustomer();
 
-                step = (step + 1) % scheduleMessages.length;
+
             }
-        }.runTaskTimer(OfficeServer.getInstance(), 0L, 1000L);
+        }.runTaskTimer(instance, 0, RANDOM.nextInt(100, 140));
     }
+
+
+
+    public void spawnNewCustomer() {
+
+        int chosenLocation = RANDOM.nextInt(villagerSpawnLocations.size());
+
+        Villager villager = ((Villager) world.spawnEntity(villagerSpawnLocations.get(chosenLocation), EntityType.VILLAGER));
+
+        Block composter = world.getBlockAt(new Location(world, villager.getLocation().getX() - 1.5, villager.getLocation().getY(), villager.getLocation().getZ()));
+
+        Levelled composterLevel = (Levelled) composter.getBlockData();
+
+        composterLevel.setLevel(8);
+        composter.setBlockData(composterLevel);
+
+        villager.setAI(false);
+
+        villager.setSilent(true);
+
+        villagerSpawnLocations.remove(chosenLocation);
+        new BukkitRunnable() {
+
+            @Override
+            public void run() {
+
+                villager.remove();
+
+            }
+        }.runTaskLater(instance, 40);
+
     }
+
+    public void addVillagerSpawnLocation(Location location){
+
+        villagerSpawnLocations.add(location);
+
+    }
+}

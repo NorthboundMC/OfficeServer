@@ -2,6 +2,7 @@ package com.github.rosapetals.officeServer;
 
 import com.github.rosapetals.officeServer.listeners.BlockListener;
 import com.github.rosapetals.officeServer.listeners.CommandListener;
+import com.github.rosapetals.officeServer.listeners.LaundryPileListener;
 import com.github.rosapetals.officeServer.listeners.PlayerListeners;
 import com.github.rosapetals.officeServer.menus.ComputerMenu;
 import com.github.rosapetals.officeServer.utils.VaultHandler;
@@ -47,7 +48,10 @@ public final class OfficeServer extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(new BlockListener(), this);
         Bukkit.getPluginManager().registerEvents(new CommandListener(), this);
         Bukkit.getPluginManager().registerEvents(new ComputerMenu(), this);
+        Bukkit.getPluginManager().registerEvents(new LaundryPileListener(), this);
         vaultSetup();
+        schedule.startCustomerLoop();
+
         for(Player player: Bukkit.getOnlinePlayers()){
             createBossBar(player,"⋆⁺₊⋆ ☾⋆⁺₊⋆NIGHT SHIFT⋆⁺₊⋆ ☾⋆⁺₊⋆");
             changeBossColor(player, BarColor.PURPLE);
