@@ -71,6 +71,10 @@ public class Schedule {
 
     public void spawnNewCustomer() {
 
+        if (villagerSpawnLocations.isEmpty())
+        {
+            return;
+        }
         int chosenLocation = RANDOM.nextInt(villagerSpawnLocations.size());
 
         Villager villager = ((Villager) world.spawnEntity(villagerSpawnLocations.get(chosenLocation), EntityType.VILLAGER));
@@ -83,6 +87,8 @@ public class Schedule {
         composter.setBlockData(composterLevel);
 
         villager.setAI(false);
+
+        world.playSound(villager.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 0.3f, 1f);
 
         villager.setSilent(true);
 
