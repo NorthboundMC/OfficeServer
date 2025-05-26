@@ -47,6 +47,7 @@ public final class OfficeServer extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(new ComputerMenu(), this);
         Bukkit.getPluginManager().registerEvents(new LaundryPileListener(), this);
         Bukkit.getPluginManager().registerEvents(new WasherListener(), this);
+        Bukkit.getPluginManager().registerEvents(new LaundrySellListener(), this);
         vaultSetup();
         schedule.startCustomerLoop();
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "/minecraft:kill @e[type=minecraft:villager]");

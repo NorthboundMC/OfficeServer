@@ -41,14 +41,17 @@ public class WasherListener implements Listener {
         Player player = event.getPlayer();
         if (event.getRightClicked() instanceof ItemFrame itemFrame && itemFrame.getItem().getType() == Material.LIGHT_BLUE_STAINED_GLASS_PANE){
             event.setCancelled(true);
-            if (washerStatus.getOrDefault(player.getUniqueId(), 0) == 1)
+
+            int status = washerStatus.getOrDefault(player.getUniqueId(), 0);
+
+            if (status == 1)
             {
                 player.sendMessage(CC.translate("&c&l&nThe Washing Machine is already running!"));
 
-            } else if (washerStatus.getOrDefault(player.getUniqueId(), 0) == 2) {
+            } else if (status == 2) {
                 player.playSound(player.getLocation(), Sound.BLOCK_IRON_TRAPDOOR_OPEN, 1f, 1f);
                 player.openInventory(player.getEnderChest());
-            } else if (washerStatus.getOrDefault(player.getUniqueId(), 0) == 0) {
+            } else if (status == 0) {
                 player.playSound(player.getLocation(), Sound.BLOCK_IRON_TRAPDOOR_OPEN, 1f, 1f);
                 openMenu(player);
             }

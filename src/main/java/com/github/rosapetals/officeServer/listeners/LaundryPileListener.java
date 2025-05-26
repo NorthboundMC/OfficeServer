@@ -16,6 +16,7 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import java.sql.ClientInfoStatus;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -103,10 +104,11 @@ public class LaundryPileListener implements Listener {
 
                 ItemStack randomClothingItem = new ItemStack(leatherArmor.get(chosenClothingItem));
                 LeatherArmorMeta randomClothingItemMeta = (LeatherArmorMeta) randomClothingItem.getItemMeta();
-                if(RANDOM.nextInt(50) == 1){
+                if(RANDOM.nextInt(100) >= 90){
                     randomClothingItemMeta.setDisplayName(CC.translate("&fDirty " + rareDescriptors.get(RANDOM.nextInt(rareDescriptors.size())) + " " + itemDescriptors.get(chosenClothingItem)));
                     randomClothingItemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
                     randomClothingItemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+                    randomClothingItemMeta.setLore(List.of(CC.translate("&5&lRarity: Rare")));
 
                 } else {
 
@@ -116,6 +118,7 @@ public class LaundryPileListener implements Listener {
                     descriptors2.remove(firstDescriptor);
 
                     randomClothingItemMeta.setDisplayName(CC.translate("&fDirty " + colors.get(RANDOM.nextInt(colors.size())) + firstDescriptorName + " &fand " +  colors.get(RANDOM.nextInt(colors.size())) + descriptors2.get(RANDOM.nextInt(descriptors2.size())) + " " + itemDescriptors.get(chosenClothingItem)));
+                    randomClothingItemMeta.setLore(List.of(CC.translate("&5&lRarity: Common")));
                     randomClothingItemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
                     randomClothingItemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 
