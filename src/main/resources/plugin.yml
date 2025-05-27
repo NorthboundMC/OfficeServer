@@ -1,4 +1,4 @@
-name: OfficeServer
+name: Laundromat
 version: '1.0-SNAPSHOT'
 main: com.github.rosapetals.officeServer.OfficeServer
 api-version: '1.21'
