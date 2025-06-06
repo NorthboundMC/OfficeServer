@@ -2,18 +2,18 @@ package com.github.rosapetals.officeServer.listeners;
 
 import com.github.rosapetals.officeServer.OfficeServer;
 import com.github.rosapetals.officeServer.utils.CC;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -29,6 +29,7 @@ public class WasherListener implements Listener {
     // 0 = empty
     // 1 = washing
     // 2 = done
+    private static final HashMap<UUID, Location> washingMachineLocation = new HashMap<>();
 
     private void openMenu(Player player) {
         int capacity = 5;
@@ -37,9 +38,9 @@ public class WasherListener implements Listener {
         player.openInventory(menu);
     }
     @EventHandler
-    public void onWasherInteract (PlayerInteractEntityEvent event) {
+    public void onWasherInteract (PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        if (event.getRightClicked() instanceof ItemFrame itemFrame && itemFrame.getItem().getType() == Material.LIGHT_BLUE_STAINED_GLASS_PANE){
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock().getType() == Material.BEEHIVE){
             event.setCancelled(true);
 
             int status = washerStatus.getOrDefault(player.getUniqueId(), 0);
@@ -54,6 +55,8 @@ public class WasherListener implements Listener {
             } else if (status == 0) {
                 player.playSound(player.getLocation(), Sound.BLOCK_IRON_TRAPDOOR_OPEN, 1f, 1f);
                 openMenu(player);
+                washingMachineLocation.put(player.getUniqueId(), event.getClickedBlock().getLocation());
+
             }
         }
 
@@ -72,37 +75,40 @@ public class WasherListener implements Listener {
             ItemStack[] clothes = event.getInventory().getContents();
             Inventory playerEnderChest = player.getEnderChest();
             int washerSpeed = 0;
-            new BukkitRunnable() {
 
+            Location loc = washingMachineLocation.get(player.getUniqueId());
+            washingMachineLocation.remove(player.getUniqueId());
+
+            new BukkitRunnable() {
+                int ticks = 0;
                 @Override
                 public void run() {
+                    loc.getWorld().spawnParticle(Particle.WATER_BUBBLE, loc, 5, 0.2, 0.5, 0.2, 0.01);
+                    if ((ticks +=5) >= 400) {
+                        for (ItemStack item: clothes){
 
-                    for (ItemStack item: clothes){
+                            if (item == null || item.getItemMeta() == null)
+                            {
+                                continue;
+                            }
 
-                        if (item == null || item.getItemMeta() == null)
-                        {
-                            continue;
+                            ItemMeta meta = item.getItemMeta();
+                            String name = meta.getDisplayName();
+                            name = name.replace("Dirty", "Clean");
+                            meta.setDisplayName(name);
+                            meta.addEnchant(Enchantment.ARROW_INFINITE, 1, true);
+                            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+                            meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+                            item.setItemMeta(meta);
+                            playerEnderChest.addItem(item);
+                            //temporary ^
                         }
-
-                        ItemMeta meta = item.getItemMeta();
-                        String name = meta.getDisplayName();
-                        name = name.replace("Dirty", "Clean");
-                        meta.setDisplayName(name);
-                        meta.addEnchant(Enchantment.ARROW_INFINITE, 1, true);
-                        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-                        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-                        item.setItemMeta(meta);
-                        playerEnderChest.addItem(item);
-                        //temporary ^
+                        washerStatus.put(player.getUniqueId(), 2);
+                        player.playSound(player.getLocation(), Sound.BLOCK_BONE_BLOCK_PLACE, 1f, 1f);
+                        this.cancel();
                     }
-                    washerStatus.put(player.getUniqueId(), 2);
-
-
-
                 }
-            }.runTaskLater(OfficeServer.getInstance(), 20*20 - washerSpeed * 20);
-
-
+            }.runTaskTimer(OfficeServer.getInstance(), 0, 5);
 
         }
     }

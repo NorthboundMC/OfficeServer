@@ -81,10 +81,13 @@ public class LaundryPileListener implements Listener {
 
             Levelled levelled = (Levelled) event.getClickedBlock().getBlockData();
             if (levelled.getLevel() == 8) {
-                schedule.addVillagerSpawnLocation(new Location(player.getWorld(), event.getClickedBlock().getX() + 1.5, event.getClickedBlock().getY(), event.getClickedBlock().getZ() + 0.5 , 90, 0));
+                if (event.getClickedBlock().getX() >= 4){
+                    schedule.addVillagerSpawnLocation(new Location(player.getWorld(), event.getClickedBlock().getX() - 0.5, event.getClickedBlock().getY(), event.getClickedBlock().getZ() + 0.5, -90, 0));
+                } else {
+                    schedule.addVillagerSpawnLocation(new Location(player.getWorld(), event.getClickedBlock().getX() + 1.5, event.getClickedBlock().getY(), event.getClickedBlock().getZ() + 0.5, 90, 0));
+                }
                 levelled.setLevel(0);
                 event.getClickedBlock().setBlockData(levelled);
-
                 Color color = Color.fromRGB(RANDOM.nextInt(256), RANDOM.nextInt(256), RANDOM.nextInt(256));
 
                 List<Material> leatherArmor = List.of(

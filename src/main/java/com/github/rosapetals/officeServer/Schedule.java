@@ -44,12 +44,18 @@ public class Schedule {
         world = instance.getServer().getWorld("world");
 
         List<Location> villagerSpawnLocations2 = List.of(
-
-                new Location(world, -0.5, -60, 22.5, 90, 0),
-                new Location(world, -0.5, -60, 21.5, 90, 0),
-                new Location(world, -0.5, -60, 20.5, 90, 0),
-                new Location(world, -0.5, -60, 19.5, 90, 0),
-                new Location(world, -0.5, -60, 18.5, 90, 0)
+                new Location(world, 0.5, -60, 29.5, 90, 0),
+                new Location(world, 0.5, -60, 30.5, 90, 0),
+                new Location(world, 0.5, -60, 31.5, 90, 0),
+                new Location(world, 0.5, -60, 32.5, 90, 0),
+                new Location(world, 0.5, -60, 33.5, 90, 0),
+                new Location(world, 0.5, -60, 34.5, 90, 0),
+                new Location(world, 4.5, -60, 29.5, -90, 0),
+                new Location(world, 4.5, -60, 30.5, -90, 0),
+                new Location(world, 4.5, -60, 31.5, -90, 0),
+                new Location(world, 4.5, -60, 32.5, -90, 0),
+                new Location(world, 4.5, -60, 33.5, -90, 0),
+                new Location(world, 4.5, -60, 34.5, -90, 0)
                 );
 
         villagerSpawnLocations = new ArrayList<>(villagerSpawnLocations2);
@@ -79,7 +85,14 @@ public class Schedule {
 
         Villager villager = ((Villager) world.spawnEntity(villagerSpawnLocations.get(chosenLocation), EntityType.VILLAGER));
 
-        Block composter = world.getBlockAt(new Location(world, villager.getLocation().getX() - 1.5, villager.getLocation().getY(), villager.getLocation().getZ()));
+        Block composter;
+
+        if (villager.getLocation().getX() >= 4) {
+            composter = world.getBlockAt(new Location(world, villager.getLocation().getX() + 0.5, villager.getLocation().getY(), villager.getLocation().getZ()));
+
+        } else {
+            composter = world.getBlockAt(new Location(world, villager.getLocation().getX() - 1.5, villager.getLocation().getY(), villager.getLocation().getZ()));
+        }
 
         Levelled composterLevel = (Levelled) composter.getBlockData();
 
