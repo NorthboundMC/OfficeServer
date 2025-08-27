@@ -1,14 +1,12 @@
 package com.github.rosapetals.officeServer.listeners;
 
 
-import com.github.rosapetals.officeServer.menus.ComputerMenu;
 import com.github.rosapetals.officeServer.utils.Cooldown;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockType;
 import org.bukkit.block.Skull;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,8 +16,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-
-import java.util.UUID;
 
 public class BlockListener implements Listener {
 

@@ -50,7 +50,7 @@ public class LaundrySellListener implements Listener {
                 if (item.getItemMeta().getDisplayName().contains("Clean") && item.getItemMeta().hasEnchant(Enchantment.ARROW_INFINITE)) {
 
                     if (item.getItemMeta().getLore() != null && item.getItemMeta().getLore().contains(CC.translate("&5&lRarity: Rare"))) {
-                        VaultHandler.addMoney(player, 50);
+                        VaultHandler.addMoney(player, 1.5);
                     } else {
                         VaultHandler.addMoney(player, 0.10);
                     }
