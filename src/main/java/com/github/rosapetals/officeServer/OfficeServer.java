@@ -1,6 +1,8 @@
 package com.github.rosapetals.officeServer;
 
 import com.github.rosapetals.officeServer.listeners.*;
+import com.github.rosapetals.officeServer.menus.DetergentMenu;
+import com.github.rosapetals.officeServer.menus.RestaurantMenu;
 import com.github.rosapetals.officeServer.utils.VaultHandler;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
@@ -40,11 +42,11 @@ public final class OfficeServer extends JavaPlugin implements Listener {
         instance = this;
         Bukkit.getPluginManager().registerEvents(this,this);
         Bukkit.getPluginManager().registerEvents(new PlayerListeners(),this);
-        Bukkit.getPluginManager().registerEvents(new CommandListener(), this);
         Bukkit.getPluginManager().registerEvents(new LaundryPileListener(), this);
         Bukkit.getPluginManager().registerEvents(new WasherListener(), this);
+        Bukkit.getPluginManager().registerEvents(new RestaurantMenu(), this);
+        Bukkit.getPluginManager().registerEvents(new DetergentMenu(), this);
         Bukkit.getPluginManager().registerEvents(new LaundrySellListener(), this);
-        Bukkit.getPluginManager().registerEvents(new BookshelfListener(), this);
         vaultSetup();
         schedule.startCustomerLoop();
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "/minecraft:kill @e[type=minecraft:villager]");

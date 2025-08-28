@@ -4,10 +4,13 @@ import com.github.rosapetals.officeServer.features.Detergent;
 import com.github.rosapetals.officeServer.utils.CC;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -20,7 +23,7 @@ import java.util.List;
 
 public class DetergentMenu implements Listener {
 
-        public void openDetergentMenu(Player p) {
+        private void openDetergentMenu(Player p) {
 
             Inventory menu = Bukkit.createInventory(null, 27, CC.translate("&b&lDetergent Store"));
 
@@ -57,6 +60,8 @@ public class DetergentMenu implements Listener {
                 menu.setItem(detergent.getDetergentData().getSlot(), potion);
             }
 
+            p.playSound(p, Sound.BLOCK_CHISELED_BOOKSHELF_PICKUP, 1f, 1f);
+
             p.openInventory(menu);
         }
 
@@ -72,4 +77,14 @@ public class DetergentMenu implements Listener {
 
             }
         }
+
+    @EventHandler
+    public void onDetergentMenuOpen(PlayerInteractEvent event) {
+
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock().getType() == Material.CHISELED_BOOKSHELF){
+            openDetergentMenu(event.getPlayer());
+
+        }
+
     }
+}
