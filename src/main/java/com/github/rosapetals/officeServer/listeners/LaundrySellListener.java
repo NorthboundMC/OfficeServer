@@ -3,6 +3,7 @@ package com.github.rosapetals.officeServer.listeners;
 import com.github.rosapetals.officeServer.utils.CC;
 import com.github.rosapetals.officeServer.utils.VaultHandler;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -48,12 +49,8 @@ public class LaundrySellListener implements Listener {
                 }
 
                 if (item.getItemMeta().getDisplayName().contains("Clean") && item.getItemMeta().hasEnchant(Enchantment.ARROW_INFINITE)) {
-
-                    if (item.getItemMeta().getLore() != null && item.getItemMeta().getLore().contains(CC.translate("&5&lRarity: Rare"))) {
-                        VaultHandler.addMoney(player, 1.5);
-                    } else {
-                        VaultHandler.addMoney(player, 0.10);
-                    }
+                    double price = Double.parseDouble(ChatColor.stripColor(item.getItemMeta().getLore().get(1)).replaceAll("Price: ", ""));
+                    VaultHandler.addMoney(player, price);
                 }
             }
             player.playSound(player, Sound.ENTITY_ARROW_HIT_PLAYER, 1, 1);

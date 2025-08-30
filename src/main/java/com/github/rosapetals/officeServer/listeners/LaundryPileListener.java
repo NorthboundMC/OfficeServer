@@ -111,8 +111,7 @@ public class LaundryPileListener implements Listener {
                     randomClothingItemMeta.setDisplayName(CC.translate("&fDirty " + rareDescriptors.get(RANDOM.nextInt(rareDescriptors.size())) + " " + itemDescriptors.get(chosenClothingItem)));
                     randomClothingItemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
                     randomClothingItemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-                    randomClothingItemMeta.setLore(List.of(CC.translate("&5&lRarity: Rare")));
-
+                    randomClothingItemMeta.setLore(List.of(CC.translate("&5&lRarity: Rare"), CC.translate("&5&lPrice: 1.50")));
                 } else {
 
                     List<String> descriptors2 = new ArrayList<>(descriptors);
@@ -121,12 +120,14 @@ public class LaundryPileListener implements Listener {
                     descriptors2.remove(firstDescriptor);
 
                     randomClothingItemMeta.setDisplayName(CC.translate("&fDirty " + colors.get(RANDOM.nextInt(colors.size())) + firstDescriptorName + " &fand " +  colors.get(RANDOM.nextInt(colors.size())) + descriptors2.get(RANDOM.nextInt(descriptors2.size())) + " " + itemDescriptors.get(chosenClothingItem)));
-                    randomClothingItemMeta.setLore(List.of(CC.translate("&5&lRarity: Common")));
+                    randomClothingItemMeta.setLore(List.of(CC.translate("&5&lRarity: Common"), CC.translate("&5&lPrice: 0.10")));
                     randomClothingItemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
                     randomClothingItemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 
 
                 }
+
+
 
                 randomClothingItemMeta.setColor(color);
 

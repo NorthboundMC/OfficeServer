@@ -1,18 +1,17 @@
 package com.github.rosapetals.officeServer.listeners;
 
 import com.github.rosapetals.officeServer.OfficeServer;
+import com.github.rosapetals.officeServer.features.Detergent;
+import com.github.rosapetals.officeServer.features.DetergentData;
 import com.github.rosapetals.officeServer.utils.CC;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.player.PlayerInteractAtEntityEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
@@ -21,9 +20,18 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 public class WasherListener implements Listener {
+
+    // Adding Multipliers to Clothes
+    // 1: Check if the player is holding something using p.getInventory().getItemInMainHand(), check to make sure it isnt null
+    // 2: Next use getItemMeta() to check if it isn't null. if not, use Detergent.fromName(getItemInMainHand().getItemMeta().getDisplayName)
+    // this will either return null or a DetergentData, so simply check to make sure it isn't null, if not, you can add the result to a local variable
+    // 3: Now having the DetergentData, remove the item from the player's hand
+    // 4: Then get the multiplier of the data and change lore line '1' of each clothing in the loop
+    // by adding the initial price * the multiplier of the detergent
 
     private static final HashMap<UUID, Integer> washerStatus = new HashMap<>();
     // 0 = empty
@@ -75,9 +83,18 @@ public class WasherListener implements Listener {
             ItemStack[] clothes = event.getInventory().getContents();
             Inventory playerEnderChest = player.getEnderChest();
             int washerSpeed = 0;
+            final double multiplier;
 
             Location loc = washingMachineLocation.get(player.getUniqueId());
             washingMachineLocation.remove(player.getUniqueId());
+
+            if(player.getInventory().getItemInMainHand().getItemMeta() != null && Detergent.fromName(player.getInventory().getItemInMainHand().getItemMeta().getDisplayName()) != null) {
+                DetergentData detergent =  Detergent.fromName(player.getInventory().getItemInMainHand().getItemMeta().getDisplayName());
+                multiplier = detergent.getMultiplier();
+                player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
+            } else {
+                multiplier = 1;
+            }
 
             new BukkitRunnable() {
                 int ticks = 0;
@@ -99,6 +116,10 @@ public class WasherListener implements Listener {
                             meta.addEnchant(Enchantment.ARROW_INFINITE, 1, true);
                             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
                             meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+                            List<String> lore = meta.getLore();
+                            double price = Double.parseDouble(ChatColor.stripColor(lore.get(1)).replaceAll("Price: ", ""));
+                            lore.set(1, CC.translate("&5&lPrice: ")  + (multiplier * price));
+                            meta.setLore(lore);
                             item.setItemMeta(meta);
                             playerEnderChest.addItem(item);
                             //temporary ^
