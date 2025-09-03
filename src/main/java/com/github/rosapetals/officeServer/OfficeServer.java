@@ -1,9 +1,13 @@
 package com.github.rosapetals.officeServer;
 
+import com.github.rosapetals.officeServer.database.DatabaseManager;
+import com.github.rosapetals.officeServer.database.PlayerData;
 import com.github.rosapetals.officeServer.listeners.*;
 import com.github.rosapetals.officeServer.menus.DetergentMenu;
 import com.github.rosapetals.officeServer.menus.RestaurantMenu;
 import com.github.rosapetals.officeServer.utils.VaultHandler;
+import lombok.extern.slf4j.Slf4j;
+import net.kyori.adventure.text.Component;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
@@ -11,10 +15,19 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 import static com.github.rosapetals.officeServer.utils.BossBarUtil.*;
 
 
+@Slf4j
 public final class OfficeServer extends JavaPlugin implements Listener {
     private Economy economy = null;
 
@@ -31,7 +44,11 @@ public final class OfficeServer extends JavaPlugin implements Listener {
         return instance;
     }
 
+    private final Map<UUID, PlayerData> playerData = new HashMap<>();
+
     private static final Schedule schedule = new Schedule();
+
+    private DatabaseManager database;
 
 
 
@@ -45,8 +62,10 @@ public final class OfficeServer extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(new LaundryPileListener(), this);
         Bukkit.getPluginManager().registerEvents(new WasherListener(), this);
         Bukkit.getPluginManager().registerEvents(new RestaurantMenu(), this);
+        Bukkit.getPluginManager().registerEvents(new JoinLeaveListener(), this);
         Bukkit.getPluginManager().registerEvents(new DetergentMenu(), this);
         Bukkit.getPluginManager().registerEvents(new LaundrySellListener(), this);
+        HandleDatabase();
         vaultSetup();
         schedule.startCustomerLoop();
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "/minecraft:kill @e[type=minecraft:villager]");
@@ -87,5 +106,55 @@ public final class OfficeServer extends JavaPlugin implements Listener {
         return currentSchedule;
     }
 
+
+    private void HandleDatabase() {
+
+
+        try{
+            this.database = new DatabaseManager(this);
+            database.initializeDatabase();
+        } catch (SQLException e){
+            Bukkit.getLogger().severe("Unable to load database, connect, or create tables");
+            e.printStackTrace();
+
+        }
+
+
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    try {
+                        // Check if they don't exist in the db (first time join)
+                        PreparedStatement statement = database.getConnection().prepareStatement("SELECT * FROM laundromat_players WHERE uuid = ?");
+                        statement.setString(1, player.getUniqueId().toString());
+                        ResultSet results = statement.executeQuery();
+                        if (!results.next()) {
+                            PlayerData data = new PlayerData(player.getUniqueId().toString(), 0, 0);
+                            OfficeServer.getInstance().getDatabase().createPlayerStats(data);
+                            playerData.put(player.getUniqueId(), data);
+                            statement.close();
+                        } else {
+                            PlayerData data = new PlayerData(player.getUniqueId().toString(), results.getInt(2), results.getInt(3));
+
+                            playerData.put(player.getUniqueId(), data);
+                        }
+                    } catch (SQLException e) {
+                        log.error("e: ", e);
+                    }
+                }
+            }.runTaskAsynchronously(this);
+        }
+
+    }
+
+
+    public DatabaseManager getDatabase() {
+        return database;
+    }
+
+    public Map<UUID, PlayerData> getPlayerData() {
+        return playerData;
+    }
 
 }
