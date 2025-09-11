@@ -152,4 +152,8 @@ public class WasherListener implements Listener {
 
     }
 
+    public static int getWasherStatus(UUID player) {
+        return washerStatus.get(player) != null ? washerStatus.get(player) : -1;
+    }
+
 }

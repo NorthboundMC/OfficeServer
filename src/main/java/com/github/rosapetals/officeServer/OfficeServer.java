@@ -5,6 +5,8 @@ import com.github.rosapetals.officeServer.database.PlayerData;
 import com.github.rosapetals.officeServer.listeners.*;
 import com.github.rosapetals.officeServer.menus.DetergentMenu;
 import com.github.rosapetals.officeServer.menus.RestaurantMenu;
+import com.github.rosapetals.officeServer.scoreboard.Scoreboard;
+import com.github.rosapetals.officeServer.scoreboard.mrmicky.FastBoard;
 import com.github.rosapetals.officeServer.utils.VaultHandler;
 import lombok.extern.slf4j.Slf4j;
 import net.kyori.adventure.text.Component;
@@ -46,11 +48,15 @@ public final class OfficeServer extends JavaPlugin implements Listener {
         return instance;
     }
 
-    private final Map<UUID, PlayerData> playerData = new HashMap<>();
-
     private static final Schedule schedule = new Schedule();
 
     private DatabaseManager database;
+
+    private final Map<UUID, PlayerData> playerData = new HashMap<>();
+
+    private final Map<UUID, FastBoard> playerScoreBoards = new HashMap<>();
+
+    private final Scoreboard scoreboard = new Scoreboard();
 
 
 
@@ -65,6 +71,7 @@ public final class OfficeServer extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(new WasherListener(), this);
         Bukkit.getPluginManager().registerEvents(new DryerListener(), this);
         Bukkit.getPluginManager().registerEvents(new RestaurantMenu(), this);
+        Bukkit.getPluginManager().registerEvents(new Scoreboard(), this);
         Bukkit.getPluginManager().registerEvents(new JoinLeaveListener(), this);
         Bukkit.getPluginManager().registerEvents(new ClothesLineListener(), this);
         Bukkit.getPluginManager().registerEvents(new DetergentMenu(), this);
@@ -74,8 +81,10 @@ public final class OfficeServer extends JavaPlugin implements Listener {
         schedule.startCustomerLoop();
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "/minecraft:kill @e[type=minecraft:villager]");
 
+        Scoreboard.initializePlugin();
         for(Player player: Bukkit.getOnlinePlayers()){
-            createBossBar(player,"⋆⁺₊⋆ ☾⋆⁺₊⋆NIGHT SHIFT⋆⁺₊⋆ ☾⋆⁺₊⋆");
+            Scoreboard.createBoard(player);
+            scoreboard.boardRunnable(player.getUniqueId(), player);
             changeBossColor(player, BarColor.PURPLE);
             player.getWorld().setTime(21000);
         }
@@ -159,6 +168,10 @@ public final class OfficeServer extends JavaPlugin implements Listener {
 
     public Map<UUID, PlayerData> getPlayerData() {
         return playerData;
+    }
+
+    public Map<UUID, FastBoard> getPlayerScoreBoards() {
+        return playerScoreBoards;
     }
 
 }

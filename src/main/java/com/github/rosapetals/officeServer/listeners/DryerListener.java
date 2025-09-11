@@ -1,6 +1,7 @@
 package com.github.rosapetals.officeServer.listeners;
 
 import com.github.rosapetals.officeServer.OfficeServer;
+import com.github.rosapetals.officeServer.database.PlayerData;
 import com.github.rosapetals.officeServer.features.Detergent;
 import com.github.rosapetals.officeServer.features.DetergentData;
 import com.github.rosapetals.officeServer.utils.CC;
@@ -28,8 +29,9 @@ public class DryerListener implements Listener {
 
     private static final HashMap<UUID, Integer> dryerStatus = new HashMap<>();
     // 0 = empty
-    // 1 = washing
+    // 1 = drying
     // 2 = done
+    //
     private static final HashMap<UUID, Location> dryerLocation = new HashMap<>();
 
     private void openMenu(Player player) {
@@ -51,7 +53,12 @@ public class DryerListener implements Listener {
 
             } else if (status == 2) {
                 player.playSound(player.getLocation(), Sound.BLOCK_IRON_TRAPDOOR_OPEN, 1f, 1f);
-                player.openInventory(player.getEnderChest());
+
+                Inventory dryerInventory = Bukkit.createInventory(null, InventoryType.CHEST, player.getName() + "'s Dryer.");
+
+                dryerInventory.setContents(OfficeServer.getInstance().getPlayerData().get(player.getUniqueId()).getDryerInventory());
+
+                player.openInventory(dryerInventory);
             } else if (status == 0) {
                 player.playSound(player.getLocation(), Sound.BLOCK_IRON_TRAPDOOR_OPEN, 1f, 1f);
                 openMenu(player);
@@ -72,52 +79,56 @@ public class DryerListener implements Listener {
 
             dryerStatus.put(player.getUniqueId(), 1);
             ItemStack[] clothes = event.getInventory().getContents();
-            Inventory playerEnderChest = player.getEnderChest();
             Location loc = dryerLocation.get(player.getUniqueId());
             dryerLocation.remove(player.getUniqueId());
 
+            PlayerData data = OfficeServer.getInstance().getPlayerData().get(player.getUniqueId());
 
-            new BukkitRunnable() {
-                int ticks = 0;
-                @Override
-                public void run() {
-                    loc.getWorld().spawnParticle(Particle.SPORE_BLOSSOM_AIR, loc, 5, 0.2, 0.5, 0.2, 0.01);
-                    if ((ticks +=5) >= 400) {
-                        for (ItemStack item: clothes){
+            List<ItemStack> list = new java.util.ArrayList<>(List.of());
 
-                            if (item == null || item.getItemMeta() == null)
-                            {
-                                continue;
-                            }
+            Bukkit.getScheduler().runTaskLater(OfficeServer.getInstance(), () -> {
 
-                            ItemMeta meta = item.getItemMeta();
-                            String name = meta.getDisplayName();
-                            name = name.replace("Wet", "Clean");
-                            meta.setDisplayName(name);
-                            meta.addEnchant(Enchantment.ARROW_INFINITE, 1, true);
-                            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-                            meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-                            item.setItemMeta(meta);
-                            playerEnderChest.addItem(item);
-                            //temporary ^
-                        }
-                        dryerStatus.put(player.getUniqueId(), 2);
-                        player.playSound(player.getLocation(), Sound.ITEM_ELYTRA_FLYING, 1f, 1f);
-                        this.cancel();
+
+                loc.getWorld().spawnParticle(Particle.SPORE_BLOSSOM_AIR, loc, 5, 0.2, 0.5, 0.2, 0.01);
+                for (ItemStack item: clothes){
+
+                    if (item == null || item.getItemMeta() == null)
+                    {
+                        continue;
                     }
+
+                    ItemMeta meta = item.getItemMeta();
+                    String name = meta.getDisplayName();
+                    name = name.replace("Wet", "Clean");
+                    meta.setDisplayName(name);
+                    meta.addEnchant(Enchantment.ARROW_INFINITE, 1, true);
+                    meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+                    meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+                    item.setItemMeta(meta);
+
+                    list.add(item);
+
+
                 }
-            }.runTaskTimerAsynchronously(OfficeServer.getInstance(), 0, 5);
+                dryerStatus.put(player.getUniqueId(), 2);
+                player.playSound(player.getLocation(), Sound.BLOCK_BONE_BLOCK_PLACE, 1f, 1f);
+                data.setDryerInventory(list.toArray(new ItemStack[0]));
+            }, 400);
 
         }
     }
 
     @EventHandler
     public void onFullDryerClose (InventoryCloseEvent event) {
-        if (event.getInventory().getType() == InventoryType.ENDER_CHEST && event.getInventory().isEmpty()){
+        if (event.getView().getTitle().equals(event.getPlayer().getName() + "'s Dryer.") && event.getInventory().isEmpty()){
             dryerStatus.put(event.getPlayer().getUniqueId(), 0);
         }
 
 
+    }
+
+    public static int getDryerStatus(UUID player) {
+        return dryerStatus.get(player) != null ? dryerStatus.get(player) : -1;
     }
 
 }
