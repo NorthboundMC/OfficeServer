@@ -4,22 +4,24 @@ import com.github.rosapetals.officeServer.OfficeServer;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public class PlayerData {
 
-    @Getter
-    @Setter
+
     private String uuid;
 
-    @Getter
-    @Setter
     private int washingMachineLevel;
 
-    @Getter
-    @Setter
     private int dryerLevel;
+
+    private ItemStack[] dryerInventory;
+
+    private ItemStack[] washerInventory;
 
     public PlayerData(String uuid, int washingMachineLevel, int dryerLevel) {
         this.uuid = uuid;
@@ -37,5 +39,43 @@ public class PlayerData {
     }
 
 
+    public int getWashingMachineLevel() {
+        return washingMachineLevel;
+    }
 
+    public void setWashingMachineLevel(int washingMachineLevel) {
+        this.washingMachineLevel = washingMachineLevel;
+    }
+
+    public int getDryerLevel() {
+        return dryerLevel;
+    }
+
+    public void setDryerLevel(int dryerLevel) {
+        this.dryerLevel = dryerLevel;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public ItemStack[] getWasherInventory() {
+        return washerInventory;
+    }
+
+    public void setWasherInventory(ItemStack[] washerInventory) {
+        this.washerInventory = washerInventory;
+    }
+
+    public ItemStack[] getDryerInventory() {
+        return dryerInventory;
+    }
+
+    public void setDryerInventory(ItemStack[] dryerInventory) {
+        this.dryerInventory = dryerInventory;
+    }
 }

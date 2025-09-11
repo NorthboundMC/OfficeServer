@@ -16,6 +16,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -61,8 +63,10 @@ public final class OfficeServer extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(new PlayerListeners(),this);
         Bukkit.getPluginManager().registerEvents(new LaundryPileListener(), this);
         Bukkit.getPluginManager().registerEvents(new WasherListener(), this);
+        Bukkit.getPluginManager().registerEvents(new DryerListener(), this);
         Bukkit.getPluginManager().registerEvents(new RestaurantMenu(), this);
         Bukkit.getPluginManager().registerEvents(new JoinLeaveListener(), this);
+        Bukkit.getPluginManager().registerEvents(new ClothesLineListener(), this);
         Bukkit.getPluginManager().registerEvents(new DetergentMenu(), this);
         Bukkit.getPluginManager().registerEvents(new LaundrySellListener(), this);
         HandleDatabase();
@@ -140,7 +144,7 @@ public final class OfficeServer extends JavaPlugin implements Listener {
                             playerData.put(player.getUniqueId(), data);
                         }
                     } catch (SQLException e) {
-                        log.error("e: ", e);
+                        System.out.println(e);
                     }
                 }
             }.runTaskAsynchronously(this);

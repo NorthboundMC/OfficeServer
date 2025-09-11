@@ -1,6 +1,7 @@
 package com.github.rosapetals.officeServer.listeners;
 
 import com.github.rosapetals.officeServer.OfficeServer;
+import com.github.rosapetals.officeServer.database.PlayerData;
 import com.github.rosapetals.officeServer.features.Detergent;
 import com.github.rosapetals.officeServer.features.DetergentData;
 import com.github.rosapetals.officeServer.utils.CC;
@@ -39,6 +40,7 @@ public class WasherListener implements Listener {
     // 2 = done
     private static final HashMap<UUID, Location> washingMachineLocation = new HashMap<>();
 
+
     private void openMenu(Player player) {
         int capacity = 5;
         Inventory menu = Bukkit.createInventory(null, InventoryType.HOPPER, player.getName() + "'s Washing Machine");
@@ -59,7 +61,14 @@ public class WasherListener implements Listener {
 
             } else if (status == 2) {
                 player.playSound(player.getLocation(), Sound.BLOCK_IRON_TRAPDOOR_OPEN, 1f, 1f);
-                player.openInventory(player.getEnderChest());
+
+                Inventory washerInventory = Bukkit.createInventory(null, InventoryType.CHEST, player.getName() + "'s Washing Machine.");
+
+                washerInventory.setContents(OfficeServer.getInstance().getPlayerData().get(player.getUniqueId()).getWasherInventory());
+
+                player.openInventory(washerInventory);
+
+
             } else if (status == 0) {
                 player.playSound(player.getLocation(), Sound.BLOCK_IRON_TRAPDOOR_OPEN, 1f, 1f);
                 openMenu(player);
@@ -73,7 +82,6 @@ public class WasherListener implements Listener {
     public void onInventoryClose (InventoryCloseEvent event){
         if (event.getPlayer() instanceof Player player && event.getView().getTitle().equals(player.getName() + "'s Washing Machine")) {
 
-
             if (event.getInventory().isEmpty()){
                 return;
             }
@@ -81,8 +89,7 @@ public class WasherListener implements Listener {
 
             washerStatus.put(player.getUniqueId(), 1);
             ItemStack[] clothes = event.getInventory().getContents();
-            Inventory playerEnderChest = player.getEnderChest();
-            int washerSpeed = 0;
+
             final double multiplier;
 
             Location loc = washingMachineLocation.get(player.getUniqueId());
@@ -96,47 +103,49 @@ public class WasherListener implements Listener {
                 multiplier = 1;
             }
 
-            new BukkitRunnable() {
-                int ticks = 0;
-                @Override
-                public void run() {
-                    loc.getWorld().spawnParticle(Particle.WATER_BUBBLE, loc, 5, 0.2, 0.5, 0.2, 0.01);
-                    if ((ticks +=5) >= 400) {
-                        for (ItemStack item: clothes){
+            PlayerData data = OfficeServer.getInstance().getPlayerData().get(player.getUniqueId());
 
-                            if (item == null || item.getItemMeta() == null)
-                            {
-                                continue;
-                            }
+            List<ItemStack> list = new java.util.ArrayList<>(List.of());
 
-                            ItemMeta meta = item.getItemMeta();
-                            String name = meta.getDisplayName();
-                            name = name.replace("Dirty", "Clean");
-                            meta.setDisplayName(name);
-                            meta.addEnchant(Enchantment.ARROW_INFINITE, 1, true);
-                            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-                            meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-                            List<String> lore = meta.getLore();
-                            double price = Double.parseDouble(ChatColor.stripColor(lore.get(1)).replaceAll("Price: ", ""));
-                            lore.set(1, CC.translate("&5&lPrice: ")  + (multiplier * price));
-                            meta.setLore(lore);
-                            item.setItemMeta(meta);
-                            playerEnderChest.addItem(item);
-                            //temporary ^
-                        }
-                        washerStatus.put(player.getUniqueId(), 2);
-                        player.playSound(player.getLocation(), Sound.BLOCK_BONE_BLOCK_PLACE, 1f, 1f);
-                        this.cancel();
+            Bukkit.getScheduler().runTaskLater(OfficeServer.getInstance(), () -> {
+
+
+                loc.getWorld().spawnParticle(Particle.WATER_BUBBLE, loc, 5, 0.2, 0.5, 0.2, 0.01);
+                for (ItemStack item: clothes){
+
+                    if (item == null || item.getItemMeta() == null)
+                    {
+                        continue;
                     }
+
+                    ItemMeta meta = item.getItemMeta();
+                    String name = meta.getDisplayName();
+                    name = name.replace("Dirty", "Wet");
+                    meta.setDisplayName(name);
+                    meta.addEnchant(Enchantment.ARROW_INFINITE, 1, true);
+                    meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+                    meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+                    List<String> lore = meta.getLore();
+                    double price = Double.parseDouble(ChatColor.stripColor(lore.get(1)).replaceAll("Price: ", ""));
+                    lore.set(1, CC.translate("&5&lPrice: ")  + (multiplier * price));
+                    meta.setLore(lore);
+                    item.setItemMeta(meta);
+
+                    list.add(item);
+
+
                 }
-            }.runTaskTimer(OfficeServer.getInstance(), 0, 5);
+                washerStatus.put(player.getUniqueId(), 2);
+                player.playSound(player.getLocation(), Sound.BLOCK_BONE_BLOCK_PLACE, 1f, 1f);
+                data.setWasherInventory(list.toArray(new ItemStack[0]));
+                }, 400);
 
         }
     }
 
     @EventHandler
     public void onFullWashingMachineClose (InventoryCloseEvent event) {
-    if (event.getInventory().getType() == InventoryType.ENDER_CHEST && event.getInventory().isEmpty()){
+    if (event.getView().getTitle().equals(event.getPlayer().getName() + "'s Washing Machine.") && event.getInventory().isEmpty()){
         washerStatus.put(event.getPlayer().getUniqueId(), 0);
     }
 

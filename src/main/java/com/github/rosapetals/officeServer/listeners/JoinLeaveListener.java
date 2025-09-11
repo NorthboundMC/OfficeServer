@@ -36,7 +36,7 @@ public class JoinLeaveListener implements Listener {
                         OfficeServer.getInstance().getPlayerData().put(event.getPlayer().getUniqueId(), data);
                     }
                 } catch (SQLException e) {
-                    log.error("e: ", e);
+                    System.out.println(e);
                 }
             }
         }.runTaskAsynchronously(OfficeServer.getInstance());
