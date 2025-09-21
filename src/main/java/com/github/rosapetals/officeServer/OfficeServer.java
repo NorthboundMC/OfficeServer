@@ -65,6 +65,7 @@ public final class OfficeServer extends JavaPlugin implements Listener {
     public void onEnable() {
         System.out.println("Works.");
         instance = this;
+        this.getCommand("checkme").setExecutor(new CheckCommand());
         Bukkit.getPluginManager().registerEvents(this,this);
         Bukkit.getPluginManager().registerEvents(new PlayerListeners(),this);
         Bukkit.getPluginManager().registerEvents(new LaundryPileListener(), this);

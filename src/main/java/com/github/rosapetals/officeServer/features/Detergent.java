@@ -2,7 +2,6 @@ package com.github.rosapetals.officeServer.features;
 
 import com.github.rosapetals.officeServer.utils.CC;
 import lombok.Getter;
-import org.bukkit.Material;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionType;
 
@@ -27,9 +26,9 @@ public enum Detergent {
 
 
 
-    Detergent(String nameID, DetergentData foodData) {
+    Detergent(String nameID, DetergentData detergentData) {
         this.nameID = nameID;
-        this.detergentData = foodData;
+        this.detergentData = detergentData;
 
     }
 

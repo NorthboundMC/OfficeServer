@@ -13,6 +13,7 @@ public class DetergentData {
     private String description;
     private int slot;
 
+
     public DetergentData(double multiplier, double price, String name, PotionData displayItem, String description, int slot) {
         this.multiplier = multiplier;
         this.price = price;
