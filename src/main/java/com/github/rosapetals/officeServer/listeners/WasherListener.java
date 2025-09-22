@@ -6,6 +6,8 @@ import com.github.rosapetals.officeServer.features.Detergent;
 import com.github.rosapetals.officeServer.features.DetergentData;
 import com.github.rosapetals.officeServer.utils.CC;
 import org.bukkit.*;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.Directional;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -92,7 +94,11 @@ public class WasherListener implements Listener {
 
             final double multiplier;
 
-            Location loc = washingMachineLocation.get(player.getUniqueId());
+            double zFactor = 0;
+                    if(((Directional) washingMachineLocation.get(player.getUniqueId()).getBlock().getBlockData()).getFacing() == BlockFace.SOUTH){
+                        zFactor = 1;
+                    }
+            Location loc = washingMachineLocation.get(player.getUniqueId()).add(0.5,0.5,zFactor);
             washingMachineLocation.remove(player.getUniqueId());
 
             if(player.getInventory().getItemInMainHand().getItemMeta() != null && Detergent.fromName(player.getInventory().getItemInMainHand().getItemMeta().getDisplayName()) != null) {
@@ -106,11 +112,11 @@ public class WasherListener implements Listener {
             PlayerData data = OfficeServer.getInstance().getPlayerData().get(player.getUniqueId());
 
             List<ItemStack> list = new java.util.ArrayList<>(List.of());
+            WashParticles(loc, player.getUniqueId());
 
             Bukkit.getScheduler().runTaskLater(OfficeServer.getInstance(), () -> {
 
 
-                loc.getWorld().spawnParticle(Particle.WATER_BUBBLE, loc, 5, 0.2, 0.5, 0.2, 0.01);
                 for (ItemStack item: clothes){
 
                     if (item == null || item.getItemMeta() == null)
@@ -122,12 +128,13 @@ public class WasherListener implements Listener {
                     String name = meta.getDisplayName();
                     name = name.replace("Dirty", "Wet");
                     meta.setDisplayName(name);
-                    meta.addEnchant(Enchantment.ARROW_INFINITE, 1, true);
+                    meta.addEnchant(Enchantment.INFINITY, 1, true);
                     meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
                     meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
                     List<String> lore = meta.getLore();
                     double price = Double.parseDouble(ChatColor.stripColor(lore.get(1)).replaceAll("Price: ", ""));
                     lore.set(1, CC.translate("&5&lPrice: ")  + (multiplier * price));
+                    lore.add(CC.translate("&8Cleaned by: " + player.getName()));
                     meta.setLore(lore);
                     item.setItemMeta(meta);
 
@@ -154,6 +161,19 @@ public class WasherListener implements Listener {
 
     public static int getWasherStatus(UUID player) {
         return washerStatus.get(player) != null ? washerStatus.get(player) : -1;
+    }
+
+    private void WashParticles(Location loc, UUID player) {
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (washerStatus.get(player) != 1) this.cancel();
+                loc.getWorld().playSound(loc, Sound.BLOCK_PISTON_CONTRACT, 0.01f, 1.0f);
+
+                loc.getWorld().spawnParticle(Particle.BUBBLE_POP, loc, 3, 0.3, 0.1, 0.05, 0.1);
+            }
+        }.runTaskTimer(OfficeServer.getInstance(), 0L, 2L);
     }
 
 }

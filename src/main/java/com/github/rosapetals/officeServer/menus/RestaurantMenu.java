@@ -18,7 +18,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionType;
 
 public class RestaurantMenu implements Listener {
@@ -32,7 +31,7 @@ public class RestaurantMenu implements Listener {
 
         ItemStack cola = new ItemStack(Material.POTION);
         PotionMeta potionMeta = (PotionMeta) cola.getItemMeta();
-        potionMeta.setBasePotionData(new PotionData(PotionType.INSTANT_DAMAGE));
+        potionMeta.setBasePotionType(PotionType.HARMING);
         cola.setItemMeta(potionMeta);
 
         menu.setItem(3, ItemUtils.CreateCustomItem(cola, CC.translate("&c&lCola"), "&f&lPrice: $0.60\n&fNOW ONLY 10% DETERGENT", false));

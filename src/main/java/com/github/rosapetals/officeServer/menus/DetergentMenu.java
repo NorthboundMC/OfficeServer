@@ -41,7 +41,7 @@ public class DetergentMenu implements Listener {
                 if (detergent.getDetergentData().getDisplayItem() != null) {
                     PotionMeta potionMeta = (PotionMeta) potion.getItemMeta();
 
-                    potionMeta.setBasePotionData(detergent.getDetergentData().getDisplayItem());
+                    potionMeta.setBasePotionType(detergent.getDetergentData().getDisplayItem());
 
                     potion.setItemMeta(potionMeta);
 

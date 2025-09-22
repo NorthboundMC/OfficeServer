@@ -48,7 +48,7 @@ public class LaundrySellListener implements Listener {
                     continue;
                 }
 
-                if (item.getItemMeta().getDisplayName().contains("Clean") && item.getItemMeta().hasEnchant(Enchantment.ARROW_INFINITE)) {
+                if (item.getItemMeta().getDisplayName().contains("Clean") && item.getItemMeta().hasEnchant(Enchantment.INFINITY)) {
                     double price = Double.parseDouble(ChatColor.stripColor(item.getItemMeta().getLore().get(1)).replaceAll("Price: ", ""));
                     VaultHandler.addMoney(player, price);
                 }

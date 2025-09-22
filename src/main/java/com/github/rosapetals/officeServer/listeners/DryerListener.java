@@ -6,6 +6,8 @@ import com.github.rosapetals.officeServer.features.Detergent;
 import com.github.rosapetals.officeServer.features.DetergentData;
 import com.github.rosapetals.officeServer.utils.CC;
 import org.bukkit.*;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.Directional;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -79,17 +81,21 @@ public class DryerListener implements Listener {
 
             dryerStatus.put(player.getUniqueId(), 1);
             ItemStack[] clothes = event.getInventory().getContents();
-            Location loc = dryerLocation.get(player.getUniqueId());
+            double zFactor = 0;
+            if(((Directional) dryerLocation.get(player.getUniqueId()).getBlock().getBlockData()).getFacing() == BlockFace.SOUTH){
+                zFactor = 1;
+            }
+            Location loc = dryerLocation.get(player.getUniqueId()).add(0.5,0.5,zFactor);
             dryerLocation.remove(player.getUniqueId());
 
             PlayerData data = OfficeServer.getInstance().getPlayerData().get(player.getUniqueId());
 
             List<ItemStack> list = new java.util.ArrayList<>(List.of());
+            DryParticles(loc, player.getUniqueId());
 
             Bukkit.getScheduler().runTaskLater(OfficeServer.getInstance(), () -> {
 
 
-                loc.getWorld().spawnParticle(Particle.SPORE_BLOSSOM_AIR, loc, 5, 0.2, 0.5, 0.2, 0.01);
                 for (ItemStack item: clothes){
 
                     if (item == null || item.getItemMeta() == null)
@@ -101,7 +107,7 @@ public class DryerListener implements Listener {
                     String name = meta.getDisplayName();
                     name = name.replace("Wet", "Clean");
                     meta.setDisplayName(name);
-                    meta.addEnchant(Enchantment.ARROW_INFINITE, 1, true);
+                    meta.addEnchant(Enchantment.INFINITY, 1, true);
                     meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
                     meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
                     item.setItemMeta(meta);
@@ -130,5 +136,18 @@ public class DryerListener implements Listener {
     public static int getDryerStatus(UUID player) {
         return dryerStatus.get(player) != null ? dryerStatus.get(player) : -1;
     }
+
+    private void DryParticles(Location loc, UUID player) {
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (dryerStatus.get(player) != 1) this.cancel();
+                loc.getWorld().playSound(loc, Sound.ENTITY_BREEZE_INHALE, 0.01f, 1.0f);
+                loc.getWorld().spawnParticle(Particle.SMALL_GUST, loc, 1, 0.2, 0.1, 0.05, 0.01);
+            }
+        }.runTaskTimer(OfficeServer.getInstance(), 0L, 2L);
+    }
+
 
 }

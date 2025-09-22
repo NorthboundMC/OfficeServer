@@ -1,7 +1,8 @@
 package com.github.rosapetals.officeServer.features;
 
 import lombok.Data;
-import org.bukkit.potion.PotionData;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionType;
 
 @Data
 public class DetergentData {
@@ -9,12 +10,12 @@ public class DetergentData {
     private double multiplier;
     private double price;
     private String name;
-    private PotionData displayItem;
+    private PotionType displayItem;
     private String description;
     private int slot;
 
 
-    public DetergentData(double multiplier, double price, String name, PotionData displayItem, String description, int slot) {
+    public DetergentData(double multiplier, double price, String name, PotionType displayItem, String description, int slot) {
         this.multiplier = multiplier;
         this.price = price;
         this.name = name;
@@ -36,7 +37,7 @@ public class DetergentData {
         return this.name;
     }
 
-    public PotionData getDisplayItem() {
+    public PotionType getDisplayItem() {
         return this.displayItem;
     }
 

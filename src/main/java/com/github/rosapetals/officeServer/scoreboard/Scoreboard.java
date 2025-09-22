@@ -1,5 +1,6 @@
 package com.github.rosapetals.officeServer.scoreboard;
 
+import com.earth2me.essentials.api.Economy;
 import com.github.rosapetals.officeServer.OfficeServer;
 import com.github.rosapetals.officeServer.listeners.DryerListener;
 import com.github.rosapetals.officeServer.listeners.WasherListener;
@@ -45,7 +46,7 @@ public class Scoreboard implements Listener {
 
         String text1 = CC.translate("&b&lLaundromat");
         String text3 = CC.translate("");
-        String text4 = CC.translate("&b◎ Money: " + MoneyFormatter.put((long) VaultHandler.getBalance(p)));
+        String text4 = CC.translate("&b◎ Money: " + Economy.format(VaultHandler.getBalance(p)));
         String text6 = CC.translate("&b▣ Dryer: " + dryerStatus);
         String text5 = CC.translate("&b⊚ Washer: " + washerStatus);
         String text7 = CC.translate("");
@@ -74,7 +75,7 @@ public class Scoreboard implements Listener {
 
         String text1 = CC.translate("&b&lLaundromat");
         String text3 = CC.translate("");
-        String text4 = CC.translate("&b◎ Money: $" + MoneyFormatter.put((long) VaultHandler.getBalance(p)));
+        String text4 = CC.translate("&b◎ Money: " + Economy.format(VaultHandler.getBalance(p)));
         String text6 = CC.translate("&b▣ Dryer: " + dryerStatus);
         String text5 = CC.translate("&b⊚ Washer: " + washerStatus);
         String text7 = CC.translate("");

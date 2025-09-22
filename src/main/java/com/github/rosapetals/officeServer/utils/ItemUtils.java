@@ -24,7 +24,7 @@ public class ItemUtils {
         itemMeta.setDisplayName(itemName);
         i.setItemMeta(itemMeta);
 
-        if (shiny) i.addUnsafeEnchantment(Enchantment.ARROW_INFINITE, 1);
+        if (shiny) i.addUnsafeEnchantment(Enchantment.INFINITY, 1);
 
         return i;
     }
