@@ -48,7 +48,6 @@ public class LaundryUnitManager {
 
         Block block = washerLocation.getBlock();
         Beehive hive = (Beehive) block.getBlockData();
-        hive.setHoneyLevel(0);
         hive.update(true, false);
 
     }

@@ -47,8 +47,8 @@ public class Scoreboard implements Listener {
         String text1 = CC.translate("&b&lLaundromat");
         String text3 = CC.translate("");
         String text4 = CC.translate("&b◎ Money: " + Economy.format(VaultHandler.getBalance(p)));
-        String text6 = CC.translate("&b▣ Dryer: " + dryerStatus);
-        String text5 = CC.translate("&b⊚ Washer: " + washerStatus);
+        String text6 = CC.translate("&b▣  Dryer: " + dryerStatus);
+        String text5 = CC.translate("&b⊚  Washer: " + washerStatus);
         String text7 = CC.translate("");
         String text12 = CC.translate("&blaundromat.minehut.gg");
         FastBoard board = new FastBoard(p);
@@ -76,8 +76,8 @@ public class Scoreboard implements Listener {
         String text1 = CC.translate("&b&lLaundromat");
         String text3 = CC.translate("");
         String text4 = CC.translate("&b◎ Money: " + Economy.format(VaultHandler.getBalance(p)));
-        String text6 = CC.translate("&b▣ Dryer: " + dryerStatus);
-        String text5 = CC.translate("&b⊚ Washer: " + washerStatus);
+        String text6 = CC.translate("&b▣  Dryer: " + dryerStatus);
+        String text5 = CC.translate("&b⊚  Washer: " + washerStatus);
         String text7 = CC.translate("");
         String text12 = CC.translate("&blaundromat.minehut.gg");
         board.updateTitle("" + text1);

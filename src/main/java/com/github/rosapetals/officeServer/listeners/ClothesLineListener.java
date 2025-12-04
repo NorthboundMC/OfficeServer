@@ -59,7 +59,7 @@ public class ClothesLineListener implements Listener {
                 ((Directional) greenData).setFacing(BlockFace.WEST);
                 banner.setBlockData(greenData);
                 ItemStack item = clothingItem.get(banner);
-                ItemMeta meta = item.getItemMeta();
+                ItemMeta meta = item.getItemMeta(); 
                 meta.setDisplayName(item.getItemMeta().getDisplayName().replace("Wet", "Clean"));
                 item.setItemMeta(meta);
                 Bukkit.getScheduler().runTaskLater(OfficeServer.getInstance(), () -> {
