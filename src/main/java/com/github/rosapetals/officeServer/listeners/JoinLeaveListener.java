@@ -32,9 +32,13 @@ public class JoinLeaveListener implements Listener {
 
                         OfficeServer.getInstance().getPlayerData().put(event.getPlayer().getUniqueId(), data);
                         statement.close();
+
+                        System.out.println("Data: " + data);
                     } else {
                         PlayerData data = new PlayerData(event.getPlayer().getUniqueId().toString(), results.getInt(2), results.getInt(3));
                         OfficeServer.getInstance().getPlayerData().put(event.getPlayer().getUniqueId(), data);
+                        System.out.println("Data: " + data);
+
                     }
                 } catch (SQLException e) {
                     System.out.println(e);

@@ -2,6 +2,7 @@ package com.github.rosapetals.officeServer;
 
 import com.github.rosapetals.officeServer.database.DatabaseManager;
 import com.github.rosapetals.officeServer.database.PlayerData;
+import com.github.rosapetals.officeServer.features.LaundryUnit;
 import com.github.rosapetals.officeServer.listeners.*;
 import com.github.rosapetals.officeServer.menus.DetergentMenu;
 import com.github.rosapetals.officeServer.menus.RestaurantMenu;
@@ -12,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.kyori.adventure.text.Component;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.boss.BarColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -24,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -57,9 +60,6 @@ public final class OfficeServer extends JavaPlugin implements Listener {
     private final Map<UUID, FastBoard> playerScoreBoards = new HashMap<>();
 
     private final Scoreboard scoreboard = new Scoreboard();
-
-
-
 
     @Override
     public void onEnable() {
