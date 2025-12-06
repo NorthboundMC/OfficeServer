@@ -1,5 +1,6 @@
 package com.github.rosapetals.officeServer;
 
+import com.github.rosapetals.officeServer.commands.UnclaimCommand;
 import com.github.rosapetals.officeServer.database.DatabaseManager;
 import com.github.rosapetals.officeServer.database.PlayerData;
 import com.github.rosapetals.officeServer.features.LaundryUnit;
@@ -66,6 +67,7 @@ public final class OfficeServer extends JavaPlugin implements Listener {
         System.out.println("Works.");
         instance = this;
         this.getCommand("checkme").setExecutor(new CheckCommand());
+        this.getCommand("unclaim").setExecutor(new UnclaimCommand());
         Bukkit.getPluginManager().registerEvents(this,this);
         Bukkit.getPluginManager().registerEvents(new PlayerListeners(),this);
         Bukkit.getPluginManager().registerEvents(new LaundryPileListener(), this);

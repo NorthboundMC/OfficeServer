@@ -4,6 +4,7 @@ import com.github.rosapetals.officeServer.OfficeServer;
 import com.github.rosapetals.officeServer.database.PlayerData;
 import com.github.rosapetals.officeServer.features.Detergent;
 import com.github.rosapetals.officeServer.features.DetergentData;
+import com.github.rosapetals.officeServer.features.LaundryUnitManager;
 import com.github.rosapetals.officeServer.utils.CC;
 import org.bukkit.*;
 import org.bukkit.block.BlockFace;
@@ -53,7 +54,19 @@ public class WasherListener implements Listener {
     public void onWasherInteract (PlayerInteractEvent event) {
         Player player = event.getPlayer();
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock().getType() == Material.BEEHIVE){
+
             event.setCancelled(true);
+
+            PlayerData data = OfficeServer.getInstance().getPlayerData().get(player.getUniqueId());
+
+            if (data.getLaundryUnit() == null) {
+
+                LaundryUnitManager.claimUnit(player, event.getClickedBlock().getLocation());
+                return;
+            } else if (!(data.getLaundryUnit().getWasherLocation().equals(event.getClickedBlock().getLocation()))) {
+                LaundryUnitManager.claimUnit(player, event.getClickedBlock().getLocation());
+                return;
+            }
 
             int status = washerStatus.getOrDefault(player.getUniqueId(), 0);
 
