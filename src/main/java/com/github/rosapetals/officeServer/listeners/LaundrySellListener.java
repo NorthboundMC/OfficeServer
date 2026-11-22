@@ -29,7 +29,7 @@ public class LaundrySellListener implements Listener {
     @EventHandler
     public void  onClickVillager (PlayerInteractEntityEvent event){
         Player player = event.getPlayer();
-        if (event.getRightClicked() instanceof Villager villager && villager.getName().equals("Mildred")){
+        if (event.getRightClicked() instanceof Villager villager && ChatColor.stripColor(villager.getName()).equals("Mildred")){
             event.setCancelled(true);
 
             openMenu(player);

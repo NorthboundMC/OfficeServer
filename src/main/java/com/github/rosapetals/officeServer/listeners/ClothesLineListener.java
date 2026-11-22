@@ -42,7 +42,7 @@ public class ClothesLineListener implements Listener {
     public void onLineInteract (PlayerInteractEvent event) {
         Player player = event.getPlayer();
         Block banner = player.getWorld().getBlockAt(new Location(player.getWorld(), event.getClickedBlock().getX()- 1, event.getClickedBlock().getY(), event.getClickedBlock().getZ()));
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock().getType() == Material.CHAIN && banner.getType() == Material.AIR && player.getInventory().getItemInMainHand().getItemMeta() != null && player.getInventory().getItemInMainHand().getItemMeta().getDisplayName().contains("Wet")){
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock().getType() == Material.IRON_CHAIN && banner.getType() == Material.AIR && player.getInventory().getItemInMainHand().getItemMeta() != null && player.getInventory().getItemInMainHand().getItemMeta().getDisplayName().contains("Wet")){
 
             banner.setType(Material.LIGHT_BLUE_WALL_BANNER);
             BlockData data = banner.getBlockData();

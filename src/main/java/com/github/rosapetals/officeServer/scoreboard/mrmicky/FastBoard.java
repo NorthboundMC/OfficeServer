@@ -3,7 +3,7 @@ package com.github.rosapetals.officeServer.scoreboard.mrmicky;
 /*
  * This file is part of FastBoard, licensed under the MIT License.
  *
- * Copyright (c) 2019-2023 MrMicky
+ * Copyright (c) 2019-2026 MrMicky
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,10 +30,11 @@ import org.bukkit.entity.Player;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Array;
+import java.util.Collection;
 import java.util.Objects;
 
 /**
- * {@inheritDoc}
+ * String-based implementation of {@link FastBoardBase}.
  */
 public class FastBoard extends FastBoardBase<String> {
 
@@ -65,7 +66,7 @@ public class FastBoard extends FastBoardBase<String> {
     public void updateTitle(String title) {
         Objects.requireNonNull(title, "title");
 
-        if (!VersionType.V1_13.isHigherOrEqual() && title.length() > 32) {
+        if (!VersionType.V1_13.isCurrentAtLeast() && title.length() > 32) {
             throw new IllegalArgumentException("Title is longer than 32 chars");
         }
 
@@ -76,22 +77,34 @@ public class FastBoard extends FastBoardBase<String> {
      * {@inheritDoc}
      */
     @Override
-    public void updateLines(String... lines) {
+    public synchronized void updateLines(Collection<String> lines, Collection<String> scores) {
         Objects.requireNonNull(lines, "lines");
 
-        if (!VersionType.V1_13.isHigherOrEqual()) {
+        if (!VersionType.V1_13.isCurrentAtLeast()) {
             int lineCount = 0;
-            for (String s : lines) {
-                if (s != null && s.length() > 30) {
-                    throw new IllegalArgumentException("Line " + lineCount + " is longer than 30 chars");
-                }
-                lineCount++;
+            for (String line : lines) {
+                checkLineLength(lineCount++, line);
             }
         }
 
-        super.updateLines(lines);
+        super.updateLines(lines, scores);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public synchronized void updateLine(int line, String text, String scoreText) {
+        if (!VersionType.V1_13.isCurrentAtLeast()) {
+            checkLineLength(line, text);
+        }
+
+        super.updateLine(line, text, scoreText);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void sendLineChange(int score) throws Throwable {
         int maxLength = hasLinesMaxLength() ? 16 : 1024;
@@ -127,7 +140,11 @@ public class FastBoard extends FastBoardBase<String> {
             suffix = suffix.substring(0, Math.min(maxLength, suffix.length()));
         }
 
-        sendTeamPacket(score, TeamMode.UPDATE, prefix, suffix);
+        if (VersionType.V1_20_3.isCurrentAtLeast() && hasCustomScores()) {
+            sendModernScorePacket(score, ScoreboardAction.CHANGE);
+        } else {
+            sendTeamPacket(score, TeamMode.UPDATE, prefix, suffix);
+        }
     }
 
     @Override
@@ -150,13 +167,19 @@ public class FastBoard extends FastBoardBase<String> {
     }
 
     /**
-     * Return if the player has a prefix/suffix characters limit.
-     * By default, it returns true only in 1.12 or lower.
-     * This method can be overridden to fix compatibility with some versions support plugin.
+     * Returns whether scoreboard lines should use the legacy prefix/suffix character limit.
+     * By default, this is true only on Minecraft 1.12 and earlier.
+     * Override this method for compatibility with plugins that provide multi-version support.
      *
-     * @return max length
+     * @return true if scoreboard lines are limited by the legacy prefix/suffix length
      */
     protected boolean hasLinesMaxLength() {
-        return !VersionType.V1_13.isHigherOrEqual();
+        return !VersionType.V1_13.isCurrentAtLeast();
+    }
+
+    private void checkLineLength(int line, String text) {
+        if (text != null && text.length() > 30) {
+            throw new IllegalArgumentException("Line " + line + " is longer than 30 chars");
+        }
     }
 }

@@ -7,6 +7,7 @@ import com.github.rosapetals.officeServer.features.LaundryUnit;
 import com.github.rosapetals.officeServer.listeners.*;
 import com.github.rosapetals.officeServer.menus.DetergentMenu;
 import com.github.rosapetals.officeServer.menus.RestaurantMenu;
+import com.github.rosapetals.officeServer.menus.UpgradesMenu;
 import com.github.rosapetals.officeServer.scoreboard.Scoreboard;
 import com.github.rosapetals.officeServer.scoreboard.mrmicky.FastBoard;
 import com.github.rosapetals.officeServer.utils.VaultHandler;
@@ -79,6 +80,7 @@ public final class OfficeServer extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(new ClothesLineListener(), this);
         Bukkit.getPluginManager().registerEvents(new DetergentMenu(), this);
         Bukkit.getPluginManager().registerEvents(new LaundrySellListener(), this);
+        Bukkit.getPluginManager().registerEvents(new UpgradesMenu(), this);
         HandleDatabase();
         vaultSetup();
         schedule.startCustomerLoop();

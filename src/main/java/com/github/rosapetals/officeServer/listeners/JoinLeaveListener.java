@@ -18,7 +18,9 @@ public class JoinLeaveListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
+        System.out.println("trying to run");
         if (OfficeServer.getInstance().getPlayerData().get(event.getPlayer().getUniqueId()) != null) return;
+        System.out.println("yes it is null");
         new BukkitRunnable() {
             @Override
             public void run() {
